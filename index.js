@@ -9,18 +9,9 @@ const app = new App({
   appToken: process.env.SLACK_APP_TOKEN,
 });
 
-app.message(async ({ message, client }) => {
-  console.log("Mensaje recibido:", message);
-
-  // Ignorar mensajes automáticos y mensajes editados
-  if (message.subtype === 'bot_message' || message.subtype === 'message_changed') return;
-
-  // Opcional: limitar a un canal específico
-  if (message.channel && process.env.MUSIC_CHANNEL_ID && message.channel !== process.env.MUSIC_CHANNEL_ID) {
-    console.log("Mensaje ignorado por canal:", message.channel);
-    return;
-  }
-
+app.message(async ({ message, client, say }) => {
+  if (message.subtype === 'bot_message') return;
+  if (message.channel && message.channel !== process.env.MUSIC_CHANNEL_ID) return;
   await handleMusicLink(message, client);
 });
 
