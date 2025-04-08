@@ -1,10 +1,8 @@
 const extractMusicLink = (text) => {
-  const cleaned = text.replace(/[<>]/g, ''); // elimina < > de Slack
-  const regex = /(https?:\/\/(?:open\.spotify\.com|music\.apple\.com|music\.youtube\.com)[^\s]*)/;
-  const match = cleaned.match(regex);
+  const regex = /(https?:\/\/(open\.spotify\.com|music\.apple\.com|music\.youtube\.com)[^\s]*)/;
+  const match = text.match(regex);
   return match ? match[1] : null;
 };
-
 
 const identifyPlatform = (url) => {
   if (url.includes("open.spotify.com")) return "spotify";
