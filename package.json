@@ -1,0 +1,28 @@
+{
+  "name": "music-link-bot",
+  "version": "1.0.0",
+  "description": "Slack bot that responds to music links with cross-platform equivalents.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "slack",
+    "music",
+    "bot",
+    "spotify",
+    "applemusic",
+    "youtubemusic"
+  ],
+  "author": "Gumo",
+  "license": "MIT",
+  "dependencies": {
+    "@slack/bolt": "^3.14.0",
+    "axios": "^1.6.0",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
