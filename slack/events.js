@@ -2,8 +2,6 @@ const { getSmartLinks } = require("../services/odesli");
 const { extractMusicLink, identifyPlatform } = require("../utils/parseLink");
 
 const handleMusicLink = async (message, client) => {
-  if (!message.text) return;
-
   const url = extractMusicLink(message.text);
   if (!url) return;
 
@@ -14,11 +12,11 @@ const handleMusicLink = async (message, client) => {
     const links = await getSmartLinks(url);
     const response = [];
 
-    if (platform !== "spotify" && links.spotify)
+    if (platform !== 'spotify' && links.spotify)
       response.push(`🔁 *Spotify*: ${links.spotify}`);
-    if (platform !== "appleMusic" && links.appleMusic)
+    if (platform !== 'appleMusic' && links.appleMusic)
       response.push(`🔁 *Apple Music*: ${links.appleMusic}`);
-    if (platform !== "youtubeMusic" && links.youtubeMusic)
+    if (platform !== 'youtubeMusic' && links.youtubeMusic)
       response.push(`🔁 *YouTube Music*: ${links.youtubeMusic}`);
 
     if (response.length > 0) {
