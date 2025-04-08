@@ -13,10 +13,10 @@ app.message(async ({ message, client }) => {
   console.log("Mensaje recibido:", message);
 
   if (message.subtype === 'bot_message') return;
-  if (message.channel && message.channel !== process.env.MUSIC_CHANNEL_ID) {
-    console.log("Mensaje ignorado por canal:", message.channel);
-    return;
-  }
+  // if (message.channel && message.channel !== process.env.MUSIC_CHANNEL_ID) {
+  //   console.log("Mensaje ignorado por canal:", message.channel);
+  //   return;
+  // }
 
   await handleMusicLink(message, client);
 });
