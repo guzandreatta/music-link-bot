@@ -12,7 +12,7 @@ const app = new App({
 app.message(async ({ message, client }) => {
   console.log("Mensaje recibido:", message);
 
-if (['bot_message', 'message_changed', 'message_deleted'].includes(message.subtype)) return;
+if (message.subtype === 'bot_message' || message.subtype === 'message_deleted') return;
 
   await handleMusicLink(message, client);
 });
