@@ -17,5 +17,8 @@ app.message(async ({ message, client, say }) => {
 
 (async () => {
   await app.start();
+  setInterval(() => {
+  console.log("⏳ Keep-alive ping");
+}, 1000 * 60 * 4); // cada 4 minutos
   console.log("⚡️ Bolt app is running!");
 })();
