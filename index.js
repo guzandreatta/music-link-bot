@@ -1,4 +1,9 @@
 require("dotenv").config();
+const express = require("express");
+const keepAlive = express();
+keepAlive.get("/", (req, res) => res.send("Music Link Bot is alive!"));
+keepAlive.listen(3000, () => console.log("🟢 Express server is running on port 3000"));
+
 const { App } = require("@slack/bolt");
 const { handleMusicLink } = require("./slack/events");
 
@@ -12,16 +17,13 @@ const app = new App({
 app.message(async ({ message, client }) => {
   console.log("Mensaje recibido:", message);
 
-if (message.subtype === 'message_changed' && !message.message?.text) return;
+  if (['bot_message', 'message_deleted'].includes(message.subtype)) return;
+  if (message.subtype === 'message_changed' && !message.message?.text) return;
 
   await handleMusicLink(message, client);
 });
 
-
 (async () => {
   await app.start();
-  setInterval(() => {
-  console.log("⏳ Keep-alive ping");
-}, 1000 * 60 * 4); // cada 4 minutos
   console.log("⚡️ Bolt app is running!");
 })();
