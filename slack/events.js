@@ -27,10 +27,11 @@ const threadTs = message.ts || message.message?.ts || message.event_ts;
 
     if (response.length > 0) {
       await client.chat.postMessage({
-        channel: message.channel,
-        thread_ts: message.ts,
-        text: response.join("\n"),
-      });
+  channel: message.channel,
+  thread_ts: threadTs,
+  text: response.join("\n"),
+});
+
     }
   } catch (error) {
     console.error("Error fetching smart links:", error);
