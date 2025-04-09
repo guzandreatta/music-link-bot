@@ -2,19 +2,21 @@ const { getSmartLinks } = require("../services/odesli");
 const { extractMusicLink, identifyPlatform } = require("../utils/parseLink");
 
 const handleMusicLink = async (message, client) => {
-  const text = message.text || message.message?.text;
-  if (!text) return;
+  // Ignore bot replies or messages without text
+  if (message.bot_id || (!message.text && !message.message?.text)) return;
 
+  const text = message.text || message.message?.text;
   const url = extractMusicLink(text);
   if (!url) return;
 
   const platform = identifyPlatform(url);
   if (!platform) return;
 
-  const ts = message.ts || message.message?.ts || message.event_ts;
+  // Ensure correct thread_ts
+  const threadTs = message.message?.ts || message.ts || message.event_ts;
 
-  // Evitamos duplicado: solo responder si el mensaje no fue ya editado por Slack
-  if (message.subtype === "message_changed" && !message.message?.edited) return;
+  // Prevent duplicate processing
+  if (message.subtype === "message_changed" && !message.previous_message) return;
 
   try {
     const links = await getSmartLinks(url);
@@ -31,7 +33,7 @@ const handleMusicLink = async (message, client) => {
 
     await client.chat.postMessage({
       channel: message.channel,
-      thread_ts: ts,
+      thread_ts: threadTs,
       blocks: [
         {
           type: "section",
