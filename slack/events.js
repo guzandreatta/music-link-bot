@@ -2,7 +2,10 @@ const { getSmartLinks } = require("../services/odesli");
 const { extractMusicLink, identifyPlatform } = require("../utils/parseLink");
 
 const handleMusicLink = async (message, client) => {
-  const url = extractMusicLink(message.text);
+  const text = message.text || message.message?.text;
+  if (!text) return;
+
+  const url = extractMusicLink(text);
   if (!url) return;
 
   const platform = identifyPlatform(url);
