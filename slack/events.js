@@ -2,7 +2,6 @@ const { getSmartLinks } = require("../services/odesli");
 const { extractMusicLink, identifyPlatform } = require("../utils/parseLink");
 
 const handleMusicLink = async (message, client) => {
-  // Ignore bot replies or messages without text
   if (message.bot_id || (!message.text && !message.message?.text)) return;
 
   const text = message.text || message.message?.text;
@@ -12,10 +11,12 @@ const handleMusicLink = async (message, client) => {
   const platform = identifyPlatform(url);
   if (!platform) return;
 
-  // Ensure correct thread_ts
-  const threadTs = message.message?.ts || message.ts || message.event_ts;
+  // 🎯 Accurate thread_ts logic
+  const threadTs =
+    message.subtype === "message_changed"
+      ? message.message?.ts || message.previous_message?.ts
+      : message.ts || message.event_ts;
 
-  // Prevent duplicate processing
   if (message.subtype === "message_changed" && !message.previous_message) return;
 
   try {
