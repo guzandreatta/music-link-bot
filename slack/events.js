@@ -11,26 +11,43 @@ const handleMusicLink = async (message, client) => {
   const platform = identifyPlatform(url);
   if (!platform) return;
 
-  const threadTs = message.ts || message.message?.ts || message.event_ts;
-  console.log("⏎ Enviando respuesta en thread:", threadTs);
+  const ts = message.ts || message.message?.ts || message.event_ts;
+
+  // Evitamos duplicado: solo responder si el mensaje no fue ya editado por Slack
+  if (message.subtype === "message_changed" && !message.message?.edited) return;
 
   try {
     const links = await getSmartLinks(url);
     const response = [];
 
     if (platform !== "spotify" && links.spotify)
-      response.push(`🔁 *Spotify*: ${links.spotify}`);
+      response.push(`🔁 *Spotify*\n${links.spotify}`);
     if (platform !== "appleMusic" && links.appleMusic)
-      response.push(`🔁 *Apple Music*: ${links.appleMusic}`);
+      response.push(`🔁 *Apple Music*\n${links.appleMusic}`);
     if (platform !== "youtubeMusic" && links.youtubeMusic)
-      response.push(`🔁 *YouTube Music*: ${links.youtubeMusic}`);
+      response.push(`🔁 *YouTube Music*\n${links.youtubeMusic}`);
 
     if (response.length === 0) return;
 
     await client.chat.postMessage({
       channel: message.channel,
-      text: response.join("\n"),
-      thread_ts: threadTs
+      thread_ts: ts,
+      blocks: [
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: "*🎶 Links equivalentes:*"
+          }
+        },
+        ...response.map((item) => ({
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: item
+          }
+        }))
+      ]
     });
   } catch (error) {
     console.error("Error fetching smart links:", error);
