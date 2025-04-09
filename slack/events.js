@@ -24,13 +24,16 @@ const handleMusicLink = async (message, client) => {
     if (platform !== "youtubeMusic" && links.youtubeMusic)
       response.push(`🔁 *YouTube Music*: ${links.youtubeMusic}`);
 
-    if (response.length > 0) {
-      await client.chat.postMessage({
-        channel: message.channel,
-        thread_ts: threadTs,
-        text: response.join("\n"),
-      });
-    }
+    // ❗️ No hagas nada si no hay links válidos
+    if (response.length === 0) return;
+
+    // ✅ Siempre responder en el mismo thread
+    await client.chat.postMessage({
+      channel: message.channel,
+      thread_ts: threadTs,
+      text: response.join("\n"),
+    });
+
   } catch (error) {
     console.error("Error fetching smart links:", error);
   }
